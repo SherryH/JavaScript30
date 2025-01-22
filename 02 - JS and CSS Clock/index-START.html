@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>JS + CSS Clock</title>
-  <link rel="icon" href="https://fav.farm/🔥" />
-</head>
-<body>
-
-
+  <head>
+    <meta charset="UTF-8" />
+    <title>JS + CSS Clock</title>
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
     <div class="clock">
       <div class="clock-face">
         <div class="hand hour-hand"></div>
@@ -16,60 +14,102 @@
       </div>
     </div>
 
+    <style>
+      html {
+        background: #018ded url(https://unsplash.it/1500/1000?image=881&blur=5);
+        background-size: cover;
+        font-family: 'helvetica neue';
+        text-align: center;
+        font-size: 10px;
+      }
 
-  <style>
-    html {
-      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
-      background-size: cover;
-      font-family: 'helvetica neue';
-      text-align: center;
-      font-size: 10px;
-    }
+      body {
+        margin: 0;
+        font-size: 2rem;
+        display: flex;
+        flex: 1;
+        min-height: 100vh;
+        align-items: center;
+      }
 
-    body {
-      margin: 0;
-      font-size: 2rem;
-      display: flex;
-      flex: 1;
-      min-height: 100vh;
-      align-items: center;
-    }
+      .clock {
+        width: 30rem;
+        height: 30rem;
+        border: 20px solid white;
+        border-radius: 50%;
+        margin: 50px auto;
+        position: relative;
+        padding: 2rem;
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1), inset 0 0 0 3px #efefef,
+          inset 0 0 10px black, 0 0 10px rgba(0, 0, 0, 0.2);
+      }
 
-    .clock {
-      width: 30rem;
-      height: 30rem;
-      border: 20px solid white;
-      border-radius: 50%;
-      margin: 50px auto;
-      position: relative;
-      padding: 2rem;
-      box-shadow:
-        0 0 0 4px rgba(0,0,0,0.1),
-        inset 0 0 0 3px #EFEFEF,
-        inset 0 0 10px black,
-        0 0 10px rgba(0,0,0,0.2);
-    }
+      .clock-face {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform: translateY(
+          -3px
+        ); /* account for the height of the clock hands */
+      }
 
-    .clock-face {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transform: translateY(-3px); /* account for the height of the clock hands */
-    }
+      .hand {
+        width: 50%;
+        height: 6px;
+        background: black;
+        position: absolute;
+        top: 50%;
+        transform: rotate(90deg);
+        transform-origin: right;
+        /*With the transition, when Hand reaches 360deg (0deg), it will move backwards and start again
+        Remove transition before Hand reaches 360deg works. Or just comment it out for now */
+        /* transition: all 0.5s; */
+        transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
 
-    .hand {
-      width: 50%;
-      height: 6px;
-      background: black;
-      position: absolute;
-      top: 50%;
-    }
+      .hour-hand {
+        width: 25%;
+      }
 
-  </style>
+      .second-hand {
+        background-color: red;
+      }
+    </style>
 
-  <script>
+    <script>
+      // get the degree that Hour Hand moves when moves 1 hour
+      function getHour() {
+        const nowHour = new Date().getHours();
+        const nowMin = new Date().getMinutes();
+        // Hour Hand moves as minutes go by too
+        const HourMinDeg = nowMin / 60 / 12;
+        const hourDeg = (nowHour / 12) * 360 + 90 + HourMinDeg;
+        document.getElementsByClassName(
+          'hour-hand'
+        )[0].style.transform = `rotate(${hourDeg}deg)`;
+      }
 
+      function getMin() {
+        const nowmin = new Date().getMinutes();
+        const minDeg = (nowmin / 60) * 360 + 90;
+        document.getElementsByClassName(
+          'min-hand'
+        )[0].style.transform = `rotate(${minDeg}deg)`;
+      }
 
-  </script>
-</body>
+      // get the degree that Second Hand moves when time goes by 1 sec
+      function getSecond() {
+        const nowSec = new Date().getSeconds();
+        const secDeg = (nowSec / 60) * 360 + 90;
+        document.getElementsByClassName(
+          'second-hand'
+        )[0].style.transform = `rotate(${secDeg}deg)`;
+      }
+      setInterval(() => {
+        getSecond();
+        getHour();
+        getMin();
+      }, 1000);
+    </script>
+  </body>
 </html>
