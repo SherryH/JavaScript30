@@ -155,10 +155,10 @@
       ];
 
       const sumInstance = data.reduce((pre, cur) => {
-        if (!pre[cur]) return (pre[cur] = 1);
-        const old = pre[cur];
-        return (pre[cur] = old + 1);
+        if (!pre.hasOwnProperty(cur)) return { ...pre, [cur]: 1 };
+        return { ...pre, [cur]: ++pre[cur] };
       }, {});
+
       console.log({ sumInstance });
     </script>
   </body>
