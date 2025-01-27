@@ -1,23 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Type Ahead 👀</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="https://fav.farm/🔥" />
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <form class="search-form">
+      <input type="text" class="search" placeholder="City or State" />
+      <ul class="suggestions">
+        <li>Filter for a city</li>
+        <li>or a state</li>
+      </ul>
+    </form>
+    <script>
+      const endpoint =
+        'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
-  <form class="search-form">
-    <input type="text" class="search" placeholder="City or State">
-    <ul class="suggestions">
-      <li>Filter for a city</li>
-      <li>or a state</li>
-    </ul>
-  </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+      const places = [];
 
-</script>
-</body>
+      fetch(endpoint)
+        .then((data) => {
+          return data.json();
+        })
+        .then((data) => {
+          console.log(data);
+          places.push(data).flat();
+        });
+
+      function findMatches() {}
+
+      function displayMatches() {
+        console.log('display');
+        const matched = 'Los';
+        const matchedHTML = `<span class="hl">${matched}</span>`;
+        const html = `
+        <li>
+          <span>${matchedHTML} Angelos, California</span>
+          <span class="population">10000</span>
+        </li>  
+        `;
+        document.querySelector('.suggestions').innerHTML = html;
+      }
+
+      document
+        .querySelector('.search')
+        .addEventListener('change', displayMatches);
+      document
+        .querySelector('.search')
+        .addEventListener('keydown', displayMatches);
+      console.log(document.querySelector('.suggestions'));
+    </script>
+  </body>
 </html>
