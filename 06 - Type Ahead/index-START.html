@@ -26,31 +26,63 @@
         })
         .then((data) => {
           console.log(data);
-          places.push(data).flat();
+          places.push(...data);
         });
 
-      function findMatches() {}
+      const placeValue = document.querySelector('input.search');
+      console.log(places);
 
-      function displayMatches() {
-        console.log('display');
-        const matched = 'Los';
-        const matchedHTML = `<span class="hl">${matched}</span>`;
-        const html = `
-        <li>
-          <span>${matchedHTML} Angelos, California</span>
-          <span class="population">10000</span>
-        </li>  
-        `;
-        document.querySelector('.suggestions').innerHTML = html;
+      function findMatches(matchedRegex) {
+        // from city and state, find the matched part
+        return places.filter((place) => {
+          if (
+            place.city.match(matchedRegex) ||
+            place.state.match(matchedRegex)
+          ) {
+            return true;
+          }
+          return false;
+        });
+      }
+
+      function displayMatches(e) {
+        const inputValue = e.target.value;
+        const matchedRegex = new RegExp(inputValue, 'gi');
+        const matches = findMatches(matchedRegex);
+        const liHtml = matches.map((matched) => {
+          // const matchedHTML = `<span class="hl">${matched}</span>`;
+          const matchedCity = matched.city.replace(
+            matchedRegex,
+            `<span class="hl">${inputValue}</span>`
+          );
+
+          const matchedState = matched.state.replace(
+            matchedRegex,
+            `<span class="hl">${inputValue}</span>`
+          );
+          const html = `
+          <li>
+            <span>${matchedCity}, ${matchedState}</span>
+            <span class="population">${matched.population}</span>
+          </li>
+          `;
+          return html;
+        });
+
+        document.querySelector('.suggestions').innerHTML = liHtml.join('');
       }
 
       document
-        .querySelector('.search')
+        .querySelector('input.search')
         .addEventListener('change', displayMatches);
       document
-        .querySelector('.search')
-        .addEventListener('keydown', displayMatches);
+        .querySelector('input.search')
+        .addEventListener('keyup', displayMatches);
       console.log(document.querySelector('.suggestions'));
+      /*
+        keydown: Fires BEFORE the input's value changes, so e.target.value still contains the previous value
+        keyup: Fires AFTER the input's value changes, so e.target.value contains the updated value
+      */
     </script>
   </body>
 </html>
