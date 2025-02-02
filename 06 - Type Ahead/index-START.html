@@ -35,13 +35,9 @@
       function findMatches(matchedRegex) {
         // from city and state, find the matched part
         return places.filter((place) => {
-          if (
-            place.city.match(matchedRegex) ||
-            place.state.match(matchedRegex)
-          ) {
-            return true;
-          }
-          return false;
+          return (
+            place.city.match(matchedRegex) || place.state.match(matchedRegex)
+          );
         });
       }
 
