@@ -12,8 +12,10 @@
       const ctx = canvas.getContext('2d');
       let hue = 0;
       let isDrawing = false;
-      let strokeWidth = 3;
       let thicker = true;
+      let lastX = 0;
+      let lastY = 0;
+
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
@@ -22,7 +24,7 @@
       // set strokecolor
       ctx.strokeStyle = `hsl(${hue},100%, 50%)`;
       // set lineWidht
-      ctx.lineWidth = strokeWidth;
+      ctx.lineWidth = 3;
       // by default, the ctx line has a cross shape
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
@@ -32,7 +34,7 @@
         // start a new path
         ctx.beginPath();
         // place the cursor from the point the line should be started
-        ctx.moveTo(e.x, e.y);
+        ctx.moveTo(lastX, lastY);
         // draw a line from current cursor position to the provided x,y coordinate
         ctx.lineTo(e.offsetX, e.offsetY);
         // add stroke to the line
@@ -41,6 +43,7 @@
         rainbowHue();
         changeLineWidth();
         ctx.strokeStyle = `hsl(${hue},100%, 50%)`;
+        [lastX, lastY] = [e.offsetX, e.offsetY];
       }
 
       function rainbowHue() {
@@ -65,8 +68,9 @@
       // add an event listener for the mouse position
       document.addEventListener('mousemove', handleMouseMove);
       // to make the drawing happen only when the mouse is down
-      document.addEventListener('mousedown', () => {
+      document.addEventListener('mousedown', (e) => {
         isDrawing = true;
+        [lastX, lastY] = [e.offsetX, e.offsetY];
       });
       document.addEventListener('mouseup', () => {
         isDrawing = false;
