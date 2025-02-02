@@ -1,20 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>HTML5 Canvas</title>
-  <link rel="icon" href="https://fav.farm/🔥" />
-</head>
-<body>
-<canvas id="draw" width="800" height="800"></canvas>
-<script>
-</script>
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTML5 Canvas</title>
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <canvas id="draw" width="800" height="800"></canvas>
+    <script>
+      const canvas = document.getElementById('draw');
+      const ctx = canvas.getContext('2d');
+      let hue = 0;
+      let isDrawing = false;
+      let strokeWidth = 3;
+      let thicker = true;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
 
-<style>
-  html, body {
-    margin: 0;
-  }
-</style>
+      // ctx.fillStyle = '#e2e8f0';
+      // ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+      // set strokecolor
+      ctx.strokeStyle = `hsl(${hue},100%, 50%)`;
+      // set lineWidht
+      ctx.lineWidth = strokeWidth;
+      // by default, the ctx line has a cross shape
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
 
-</body>
+      function handleMouseMove(e) {
+        if (!isDrawing) return;
+        // start a new path
+        ctx.beginPath();
+        // place the cursor from the point the line should be started
+        ctx.moveTo(e.x, e.y);
+        // draw a line from current cursor position to the provided x,y coordinate
+        ctx.lineTo(e.offsetX, e.offsetY);
+        // add stroke to the line
+        ctx.stroke();
+
+        rainbowHue();
+        changeLineWidth();
+        ctx.strokeStyle = `hsl(${hue},100%, 50%)`;
+      }
+
+      function rainbowHue() {
+        if (hue === 360) {
+          hue = 0;
+        }
+        hue++;
+      }
+
+      function changeLineWidth() {
+        // if the width is over 100, make it reducing
+        if (ctx.lineWidth > 100) thicker = false;
+        if (ctx.lineWidth < 3) thicker = true;
+        if (thicker) {
+          ctx.lineWidth++;
+        } else {
+          ctx.lineWidth--;
+        }
+        console.log(ctx.lineWidth);
+      }
+
+      // add an event listener for the mouse position
+      document.addEventListener('mousemove', handleMouseMove);
+      // to make the drawing happen only when the mouse is down
+      document.addEventListener('mousedown', () => {
+        isDrawing = true;
+      });
+      document.addEventListener('mouseup', () => {
+        isDrawing = false;
+      });
+    </script>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+    </style>
+  </body>
 </html>
