@@ -97,6 +97,38 @@
       </div>
     </div>
 
-    <script></script>
+    <script>
+      // Given a checkboxA is checked
+      // When user presses the shift key
+      // And checks another checkboxB
+      // Then the checkboxes between A and B are auto checked
+
+      // we want to loop through all checkbox
+      // For each checkbox, see if it is checked
+      const checkboxes = document.querySelectorAll(
+        '.inbox input[type="checkbox"]'
+      );
+      checkboxes.forEach((checkbox) => {
+        console.log(checkbox.checked);
+
+        // we listen for user pressing shift key
+        // when yes, checks which checkbox is checked by looping
+        // need to use "click" event as "change" event doesn't register "shiftKey"
+        checkbox.addEventListener('click', handleShift);
+      });
+
+      function handleShift(e) {
+        console.log(e.shiftKey);
+        // when shiftKey is pressed, when checkbox is checked, then returns true
+        // then check if there is another one checked
+        if (e.shiftKey && this.checked) {
+          checkboxes.forEach((ch) => {
+            if (ch.checked) {
+              console.log(ch);
+            }
+          });
+        }
+      }
+    </script>
   </body>
 </html>
