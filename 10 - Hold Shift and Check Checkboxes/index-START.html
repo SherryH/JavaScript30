@@ -118,16 +118,24 @@
       });
 
       function handleShift(e) {
-        console.log(e.shiftKey);
         // when shiftKey is pressed, when checkbox is checked, then returns true
         // then check if there is another one checked
-        if (e.shiftKey && this.checked) {
-          checkboxes.forEach((ch) => {
+        let inBetween = false;
+        checkboxes.forEach((ch) => {
+          // when shift key is pressed and checkbox is checked
+          if (e.shiftKey && this.checked) {
+            // then we find the 1st checked, signalling
             if (ch.checked) {
-              console.log(ch);
+              inBetween = !inBetween;
             }
-          });
-        }
+            if (inBetween) {
+              ch.checked = true;
+            }
+          }
+        });
+        // NOTE: using the inbetween variable, we dont need to keep another array to track the inBetween checkbox index
+        // simply assume there are 2 checked, so we just need to toggle inBetween falsy when reaching "ch.checked" again
+        // without having to keeping track of the inBetween positions
       }
     </script>
   </body>
