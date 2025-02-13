@@ -1,6 +1,7 @@
 const video = document.querySelector('video');
 const toggleButton = document.querySelector('button.toggle');
 const skipButtons = document.querySelectorAll('[data-skip]');
+const rangeButtons = document.querySelectorAll('input.player__slider');
 // One problem when following along the course video is that, I don't know where to find the list of methods available.
 // for video, it has the "paused" property and "play()", "pause()" method
 // It is not all that obvious to find the MDN doc that lists all methods
@@ -29,10 +30,17 @@ function skipVideo() {
   console.log(video.currentTime);
 }
 
+function handleRangeChange(e) {
+  video[this.name] = e.target.value;
+}
+
 // Hook up event listeners
 video.addEventListener('click', togglePlay);
 toggleButton.addEventListener('click', togglePlay);
 video.addEventListener('play', togglePlayUI);
 skipButtons.forEach((skipButton) => {
   skipButton.addEventListener('click', skipVideo);
+});
+rangeButtons.forEach((rangeButton) => {
+  rangeButton.addEventListener('change', handleRangeChange);
 });
