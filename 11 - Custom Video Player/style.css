@@ -104,7 +104,7 @@ body {
   background: #ffc600;
   flex: 0; /* Don't grow or shrink */
   /*flex-basis sets the initial main size of a flex item*/
-  flex-basis: 50%; /* Takes 50% of parent's width */
+  flex-basis: 0%; /* Takes 50% of parent's width */
 }
 
 /* unholy css to style input type="range" */

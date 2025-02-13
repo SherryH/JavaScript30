@@ -37,16 +37,17 @@ function handleRangeChange(e) {
   video[this.name] = e.target.value;
 }
 
+// update progressbar style and update video time should be placed in different functions for separation of responsibility
 function handleProgressChange(e) {
-  console.log(this);
-  console.log(e.offsetX);
-  console.log(progress.offsetWidth);
-  console.log(progress);
   // Calculate the progress percentage based on the current time
-  // const percentage = (video.currentTime / video.duration) * 100;
   const percentage = (e.offsetX / progress.offsetWidth) * 100;
-  progressbar.style.flexBasis = `${percentage}%`;
   video.currentTime = (video.duration * percentage) / 100;
+}
+
+// Make the progressbar style dependent on video time on timeupdate
+function handleTimeupdate() {
+  const percentage = (video.currentTime / video.duration) * 100;
+  progressbar.style.flexBasis = `${percentage}%`;
 }
 
 // Hook up event listeners
@@ -71,3 +72,6 @@ progress.addEventListener('mousedown', () => {
 progress.addEventListener('mouseup', () => {
   mousedown = false;
 });
+
+// The timeupdate event is fired when the current playback position of a media element (audio or video) changes
+video.addEventListener('timeupdate', handleTimeupdate);
