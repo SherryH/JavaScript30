@@ -1,7 +1,6 @@
 const video = document.querySelector('video');
 const toggleButton = document.querySelector('button.toggle');
-
-console.dir(video);
+const skipButtons = document.querySelectorAll('[data-skip]');
 // One problem when following along the course video is that, I don't know where to find the list of methods available.
 // for video, it has the "paused" property and "play()", "pause()" method
 // It is not all that obvious to find the MDN doc that lists all methods
@@ -18,21 +17,22 @@ function togglePlay() {
   }
 }
 
-// Hook up event listeners
-video.addEventListener('click', togglePlay);
-toggleButton.addEventListener('click', togglePlay);
-video.addEventListener('play', (e) => {
-  // when play event is fired. ie. video is playing, change UI to pause
-  toggleButton.innerHTML = '▐▐';
-});
-video.addEventListener('pause', () => {
-  toggleButton.innerHTML = '►';
-});
-
-// UI changes
-
 // toggleFunction, change the play button icon to pause and vice versa
 function togglePlayUI() {
   // get play button
-  toggleButton.innerHTML;
+  toggleButton.innerHTML = video.paused ? '►' : '▐▐';
 }
+
+// enable video to fast foreward/backward
+function skipVideo() {
+  video.currentTime = video.currentTime + parseFloat(this.dataset.skip);
+  console.log(video.currentTime);
+}
+
+// Hook up event listeners
+video.addEventListener('click', togglePlay);
+toggleButton.addEventListener('click', togglePlay);
+video.addEventListener('play', togglePlayUI);
+skipButtons.forEach((skipButton) => {
+  skipButton.addEventListener('click', skipVideo);
+});
