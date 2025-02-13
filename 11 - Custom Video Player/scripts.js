@@ -1,9 +1,11 @@
+const player = document.querySelector('.player');
 const video = document.querySelector('video');
 const toggleButton = document.querySelector('button.toggle');
 const skipButtons = document.querySelectorAll('[data-skip]');
 const rangeButtons = document.querySelectorAll('input.player__slider');
 const progressbar = document.querySelector('.progress__filled');
 const progress = document.querySelector('.progress');
+const fullscreenButton = document.querySelector('button[name="fullscreen"]');
 let mousedown = false; // boolean to control drag&dcrub of the progressbar
 // One problem when following along the course video is that, I don't know where to find the list of methods available.
 // for video, it has the "paused" property and "play()", "pause()" method
@@ -50,10 +52,23 @@ function handleTimeupdate() {
   progressbar.style.flexBasis = `${percentage}%`;
 }
 
+function handleFullscreen() {
+  if (!document.fullscreenElement) {
+    player.requestFullscreen();
+    fullscreenButton.innerHTML = '↙';
+  } else {
+    document.exitFullscreen();
+    fullscreenButton.innerHTML = '⌞ ⌝ ';
+  }
+  // when using video to requestFullscreen, the native controls show instead of custom controls
+  // video.requestFullscreen();
+}
+
 // Hook up event listeners
 video.addEventListener('click', togglePlay);
 toggleButton.addEventListener('click', togglePlay);
 video.addEventListener('play', togglePlayUI);
+video.addEventListener('pause', togglePlayUI);
 skipButtons.forEach((skipButton) => {
   skipButton.addEventListener('click', skipVideo);
 });
@@ -75,3 +90,6 @@ progress.addEventListener('mouseup', () => {
 
 // The timeupdate event is fired when the current playback position of a media element (audio or video) changes
 video.addEventListener('timeupdate', handleTimeupdate);
+
+fullscreenButton.addEventListener('click', handleFullscreen);
+console.log(fullscreenButton);
