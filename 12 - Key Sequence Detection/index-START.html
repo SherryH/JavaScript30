@@ -7,6 +7,23 @@
     <link rel="icon" href="https://fav.farm/🔥" />
   </head>
   <body>
-    <script></script>
+    <script>
+      const secretCode = 'chatGPTArrowUp'.toLowerCase();
+      const pressed = [];
+      document.addEventListener('keyup', (e) => {
+        // this is how Easter Eggs are hidden!
+        pressed.push(e.key);
+        console.log(pressed);
+        //keep the pressed[] to contain only length of secretCode max
+        // [c]
+        // [c, h] ...
+        // myFish.splice(-2, 1); Remove 1 element from index -2
+        // cannot hardcode to splice(-secretCode.length , 1) bcos we want to splice only when pressed > secretCode
+        pressed.splice(-secretCode.length, pressed.length - secretCode.length);
+        if (pressed.join('').toLowerCase().includes(secretCode)) {
+          cornify_add();
+        }
+      });
+    </script>
   </body>
 </html>
