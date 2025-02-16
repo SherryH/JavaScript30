@@ -223,7 +223,7 @@
     </div>
 
     <script>
-      function debounce(func, wait = 20, immediate = true) {
+      function debounce(func, wait = 10, immediate = true) {
         var timeout;
         return function () {
           var context = this,
@@ -261,7 +261,7 @@
        |                  |
        |                  |
        |                  |
-       +------------------+  ← Viewport (innerHeight)
+       +------------------+  ← Viewport (innerHeight) // const value if window.screen not resized
        |                  |
        |   +----------+   |  ← Image (offsetTop) // constant value calc from top
        |   |          |   |
@@ -275,9 +275,9 @@
       */
 
       // If we want the slide-in to appear when the top of the Image is shown
-      // const slideInAt = (window.scrollY + window.innerHeight) > sliderImage.offsetTop
+
       // We want to slide in when the Image is HALF-WAY thru
-      // const slideInAt = (window.scrollY + window.innerHeight) > sliderImage.offsetTop + sliderImage.height /2
+      // const isImageHalfShown = (window.scrollY + window.innerHeight) > sliderImage.offsetTop + sliderImage.height /2
       //                 = (window.scrollY + window.innerHeight) - sliderImage.height /2 > sliderImage.offsetTop
       // the bottom position of the image is imageBottom
       //
@@ -287,25 +287,31 @@
 
       const sliderImages = document.querySelectorAll('img.slide-in');
 
-      // end of sliderImages forEach
-      document.addEventListener('scroll', () => {
+      function handleScroll() {
         sliderImages.forEach((sliderImage, index) => {
           const slideInAt =
             window.scrollY + window.innerHeight - sliderImage.height / 2;
-          if (index === 0) {
-            console.log(window.scrollY); //
-            console.log({ slideInAt });
-            console.log(sliderImage.offsetTop);
-          }
+
+          // isImageHalfShown = (window.scrollY + window.innerHeight) > sliderImage.offsetTop + sliderImage.height /2
+
+          const isImageHalfShown = slideInAt > sliderImage.offsetTop;
+
+          // if the image is scrolled past beyond the current view, slide-out
+          const isImageBottom = sliderImage.offsetTop + sliderImage.height;
+          const isScrolledPast = window.scrollY > isImageBottom;
+
           // check the current scroll position, if scrollY >= slideInAt, then add the css class
-          if (sliderImage.offsetTop <= slideInAt) {
+          if (isImageHalfShown && !isScrolledPast) {
             console.log('active!');
             sliderImage.classList.add('active');
+          } else {
+            sliderImage.classList.remove('active');
           }
         });
-      }); //end scroll
+      }
 
-      console.log(sliderImages);
+      // end of sliderImages forEach
+      document.addEventListener('scroll', debounce(handleScroll)); //end scroll
     </script>
 
     <style>
