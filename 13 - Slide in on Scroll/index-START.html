@@ -243,42 +243,42 @@
       // so we need to 1. find out the total bottom postion of the viewport
       // 2. to make animation will trigger when the image is halfway visible
       /**
-     * 
-     * window.scrollY: This represents how many pixels the user has scrolled vertically from the top of the page.
-        If you're at the top of the page, it's 0
-        As you scroll down, this value increases
+      *
+      * window.scrollY: This represents how many pixels the user has scrolled vertically from the top of the page.
+         If you're at the top of the page, it's 0
+         As you scroll down, this value increases
 
 
-      * window.innerHeight: This is the height of the browser's viewport (the visible area of the webpage)
+       * window.innerHeight: This is the height of the browser's viewport (the visible area of the webpage)
 
-      * sliderImage.offsetTop: The distance from the top of the page to the top of the image
+       * sliderImage.offsetTop: The distance from the top of the page to the top of the image
 
-      * sliderImage.height: The height of the image itself
+       * sliderImage.height: The height of the image itself
 
-        It's the amount of content you can see without scrolling
-        Remains constant unless you resize the browser window
-      +------------------+  ← Top of page (scrollY = 0)
-      |                  |
-      |                  |
-      |                  |
-      +------------------+  ← Viewport (innerHeight)
-      |                  |
-      |   +----------+   |  ← Image (offsetTop)
-      |   |          |   |
-      |   |  Image   |   |  ← Image (height)
-      |   |          |   |
-      |   +----------+   |  ← imageBottom (offsetTop + height)
-      |                  |
-      +------------------+
+         It's the amount of content you can see without scrolling
+         Remains constant unless you resize the browser window
+       +------------------+  ← Top of page (scrollY = 0)
+       |                  |
+       |                  |
+       |                  |
+       +------------------+  ← Viewport (innerHeight)
+       |                  |
+       |   +----------+   |  ← Image (offsetTop) // constant value calc from top
+       |   |          |   |
+       |   |  Image   |   |  ← Image (height)
+       |   |          |   |
+       |   +----------+   |  ← imageBottom (offsetTop + height)
+       |                  |
+       +------------------+
 
-     * 
-     */
+      *
+      */
 
       // If we want the slide-in to appear when the top of the Image is shown
       // const slideInAt = (window.scrollY + window.innerHeight) > sliderImage.offsetTop
       // We want to slide in when the Image is HALF-WAY thru
-      // const slideInAt = (window.scrollY + window.innerHeight) > sliderImage.offetTop + sliderImage.height /2
-      //                 = (window.scrollY + window.innerHeight) - sliderImage.height /2 > sliderImage.offetTop
+      // const slideInAt = (window.scrollY + window.innerHeight) > sliderImage.offsetTop + sliderImage.height /2
+      //                 = (window.scrollY + window.innerHeight) - sliderImage.height /2 > sliderImage.offsetTop
       // the bottom position of the image is imageBottom
       //
       // const isNotScrolledPast = window.scrollY < imageBottom;
@@ -286,10 +286,26 @@
       //   window.scrollY + window.innerHeight - sliderImage.height / 2;
 
       const sliderImages = document.querySelectorAll('img.slide-in');
-      sliderImages.forEach((sliderImage) => {
-        // const slideInAt =
-        //   window.scrollY + window.innerHeight - sliderImage.height / 2;
-      });
+
+      // end of sliderImages forEach
+      document.addEventListener('scroll', () => {
+        sliderImages.forEach((sliderImage, index) => {
+          const slideInAt =
+            window.scrollY + window.innerHeight - sliderImage.height / 2;
+          if (index === 0) {
+            console.log(window.scrollY); //
+            console.log({ slideInAt });
+            console.log(sliderImage.offsetTop);
+          }
+          // check the current scroll position, if scrollY >= slideInAt, then add the css class
+          if (sliderImage.offsetTop <= slideInAt) {
+            console.log('active!');
+            sliderImage.classList.add('active');
+          }
+        });
+      }); //end scroll
+
+      console.log(sliderImages);
     </script>
 
     <style>
