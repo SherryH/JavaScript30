@@ -76,7 +76,7 @@ h2 {
 }
 
 .toggle input {
-  /* display: none; */
+  display: none;
 }
 .toggle input + label:before {
   content: '⬜️';

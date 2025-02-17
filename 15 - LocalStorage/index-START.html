@@ -108,7 +108,7 @@
         items[index].checked = !items[index].checked;
         localStorage.setItem('items', JSON.stringify(items));
 
-        checkToggleAll();
+        updateToggleAllState();
 
         // rerender
         itemsList.innerHTML = displayList();
@@ -116,47 +116,24 @@
 
       function handleToggleAll() {
         const allChecked = items.every((item) => item.checked);
-        const allUnchecked = items.every((item) => !item.checkbox);
-        console.log({ allChecked });
-        if (allChecked) {
-          // uncheck all
-          items.forEach((item) => (item.checked = false));
-          localStorage.setItem('items', JSON.stringify(items));
-        } else if (allUnchecked) {
-          items.forEach((item) => (item.checked = true));
-          localStorage.setItem('items', JSON.stringify(items));
-        } else {
-          items.forEach((item) => (item.checked = true));
-          localStorage.setItem('items', JSON.stringify(items));
-          // some checked
-          // make the toggleAll button intermediate state
-          console.log(toggleAll);
-        }
-        console.table(items);
 
+        const toggledState = !allChecked;
+        items.forEach((item) => (item.checked = toggledState));
+        localStorage.setItem('items', JSON.stringify(items));
+
+        updateToggleAllState();
         // rerender
         itemsList.innerHTML = displayList();
       }
 
-      function checkToggleAll() {
-        toggleAll.indeterminate = true;
+      function updateToggleAllState() {
+        // .indeterminate can only be set via JS, no html property, only UI difference
+
         const allChecked = items.every((item) => item.checked);
         const allUnchecked = items.every((item) => !item.checked);
-        console.dir(allChecked);
-        console.dir(allUnchecked);
-        console.log(items);
 
-        if (allChecked) {
-          toggleAll.indeterminate = false;
-          toggleAll.checked = true;
-        } else if (allUnchecked) {
-          toggleAll.indeterminate = false;
-          toggleAll.checked = false;
-        } else {
-          toggleAll.indeterminate = true;
-        }
-        console.log(toggleAll);
-        console.log(toggleAll.indeterminate);
+        toggleAll.indeterminate = !allChecked && !allUnchecked;
+        toggleAll.checked = allChecked;
       }
 
       addItems.addEventListener('submit', handleSubmit);
