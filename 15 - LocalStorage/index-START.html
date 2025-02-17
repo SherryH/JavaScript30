@@ -45,6 +45,10 @@
     <div class="wrapper">
       <h2>LOCAL TAPAS</h2>
       <p></p>
+      <div class="toggle">
+        <input id="toggleAll" type="checkbox" name="toggle" />
+        <label for="toggleAll">Toggle</label>
+      </div>
       <ul class="plates">
         <li>Loading Tapas...</li>
       </ul>
@@ -57,6 +61,8 @@
     <script>
       const addItems = document.querySelector('.add-items');
       const itemsList = document.querySelector('.plates');
+      const toggleAll = document.querySelector('.toggle input');
+
       const items = JSON.parse(localStorage.getItem('items')) || [];
 
       // enable a list of checkboxes to be shown on the screen
@@ -85,6 +91,9 @@
         itemsList.innerHTML = displayList();
         // save in the localStorage
         localStorage.setItem('items', JSON.stringify(items));
+
+        // clear input
+        addItems.reset();
       }
 
       function handleCheckbox(e) {
@@ -99,12 +108,60 @@
         items[index].checked = !items[index].checked;
         localStorage.setItem('items', JSON.stringify(items));
 
+        checkToggleAll();
+
         // rerender
         itemsList.innerHTML = displayList();
       }
 
+      function handleToggleAll() {
+        const allChecked = items.every((item) => item.checked);
+        const allUnchecked = items.every((item) => !item.checkbox);
+        console.log({ allChecked });
+        if (allChecked) {
+          // uncheck all
+          items.forEach((item) => (item.checked = false));
+          localStorage.setItem('items', JSON.stringify(items));
+        } else if (allUnchecked) {
+          items.forEach((item) => (item.checked = true));
+          localStorage.setItem('items', JSON.stringify(items));
+        } else {
+          items.forEach((item) => (item.checked = true));
+          localStorage.setItem('items', JSON.stringify(items));
+          // some checked
+          // make the toggleAll button intermediate state
+          console.log(toggleAll);
+        }
+        console.table(items);
+
+        // rerender
+        itemsList.innerHTML = displayList();
+      }
+
+      function checkToggleAll() {
+        toggleAll.indeterminate = true;
+        const allChecked = items.every((item) => item.checked);
+        const allUnchecked = items.every((item) => !item.checked);
+        console.dir(allChecked);
+        console.dir(allUnchecked);
+        console.log(items);
+
+        if (allChecked) {
+          toggleAll.indeterminate = false;
+          toggleAll.checked = true;
+        } else if (allUnchecked) {
+          toggleAll.indeterminate = false;
+          toggleAll.checked = false;
+        } else {
+          toggleAll.indeterminate = true;
+        }
+        console.log(toggleAll);
+        console.log(toggleAll.indeterminate);
+      }
+
       addItems.addEventListener('submit', handleSubmit);
       itemsList.addEventListener('click', handleCheckbox);
+      toggleAll.addEventListener('click', handleToggleAll);
     </script>
   </body>
 </html>
