@@ -1,41 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Mouse Shadow</title>
-  <link rel="icon" href="https://fav.farm/🔥" />
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mouse Shadow</title>
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <div class="hero">
+      <h1 contenteditable>🔥WOAH!</h1>
+    </div>
 
-  <div class="hero">
-    <h1 contenteditable>🔥WOAH!</h1>
-  </div>
+    <style>
+      html {
+        color: black;
+        font-family: sans-serif;
+      }
 
-  <style>
-  html {
-    color: black;
-    font-family: sans-serif;
-  }
+      body {
+        margin: 0;
+      }
 
-  body {
-    margin: 0;
-  }
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: black;
+      }
 
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-  }
+      h1 {
+        text-shadow: 10px 10px 0 rgba(0, 0, 0, 1);
+        font-size: 100px;
+      }
+    </style>
 
-  h1 {
-    text-shadow: 10px 10px 0 rgba(0,0,0,1);
-    font-size: 100px;
-  }
-  </style>
+    <script>
+      const hero = document.querySelector('.hero');
+      const text = hero.querySelector('h1');
+      const walk = 200; // Total range of shadow movement in pixels
 
-<script>
-</script>
-</body>
+      // the height and width of the hero section
+      const { offsetWidth: width, offsetHeight: height } = hero;
+
+      function handleMousemove(e) {
+        // the current mousemove position
+        let { offsetX: x, offsetY: y } = e;
+
+        /**
+         * Note: the coordinates of the mousemovement e.target.offset and element dimensions hero.offsetWidth/Height are different
+         * The formula (x / width) * walk - walk / 2 is used to create a bounded range of movement for the text shadow. Let's break it down:
+
+          walk is the total range you want the shadow to move (e.g., 50 pixels)
+          x / width converts mouse position to a percentage (0 to 1)
+          * walk scales this to your desired range (0 to 50 pixels)
+          - walk / 2 centers the range (-25 to +25 pixels)
+
+          So if walk = 50:
+
+          When mouse is at far left (x = 0): (0/width * 50) - 25 = -25px
+          When mouse is centered (x = width/2): (0.5 * 50) - 25 = 0px
+          When mouse is at far right (x = width): (1 * 50) - 25 = +25px
+         *
+         */
+
+        // the text shadow centered from the middle of the hero element so make the middle position center
+        const centerX = width / 2;
+        const centerY = height / 2;
+
+        // calc the gap between the shadow and the text (walk)
+        // shadow follows the mouse
+        // const xWalk = x  - width / 2;
+        // const yWalk = y  - height / 2;
+
+        // to reduce the shadow scale
+        const xWalk = Math.round((x / width) * walk - walk / 2);
+        const yWalk = Math.round((y / height) * walk - walk / 2);
+
+        text.style.textShadow = `
+      ${xWalk}px ${yWalk}px 0 rgba(255,0,255,0.7),
+      ${xWalk * -1}px ${yWalk}px 0 rgba(0,255,255,0.7),
+      ${yWalk}px ${xWalk * -1}px 0 rgba(0,255,0,0.7),
+      ${yWalk * -1}px ${xWalk}px 0 rgba(0,0,255,0.7)
+      `;
+      }
+
+      hero.addEventListener('mousemove', handleMousemove);
+    </script>
+  </body>
 </html>
