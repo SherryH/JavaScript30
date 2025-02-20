@@ -77,6 +77,7 @@
         })
         .map((band) => band.original);
 
+      //----------------------------------
       // wesbos solution is more elegant
       function strip(bandName) {
         return bandName.replace(/^(a |the |an )/i, '').trim();
@@ -84,8 +85,11 @@
       // when sorting, strip the article off the item for comparison without affecting the original item!!!
       // FUNCTION FIRST!!
       const sortedBands = bands.sort((a, b) => (strip(a) > strip(b) ? 1 : -1));
+      //-----------------------------------
 
-      console.dir(newBands);
+      document.querySelector('#bands').innerHTML = newBands
+        .map((band) => `<li>${band}</li>`)
+        .join('');
     </script>
   </body>
 </html>
